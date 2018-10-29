@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -15,12 +17,9 @@ import java.util.Date;
 public class DateConverterDemo {
 
      public static void main(String[] args) throws Exception {
-         DateConverter dateConverter = new DateConverter("2018/05/10");
-         
-         
-         //System.out.println(dateConverter.getDate().toString());
-         System.out.println("The new date.." + DateConverter.normalizeDate("2018  05 10."));
-         
+         String date = "dec 11 2015";
+         System.out.println("The NEW DATE.." + DateConverter.normalizeDate(date));
+
     }
     
 }
