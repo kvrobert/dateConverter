@@ -14,11 +14,12 @@ import java.util.Date;
  */
 public class DateConverterDemo {
 
-     public static void main(String[] args) {
+     public static void main(String[] args) throws Exception {
          DateConverter dateConverter = new DateConverter("2018/05/10");
          
          
-         System.out.println(dateConverter.getDate().toString());
+         //System.out.println(dateConverter.getDate().toString());
+         System.out.println("The new date.." + DateConverter.normalizeDate("2018  05 10."));
          
     }
     

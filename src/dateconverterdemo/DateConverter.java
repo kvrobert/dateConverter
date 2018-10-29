@@ -14,8 +14,9 @@ import java.util.TimeZone;
 public class DateConverter {
 
     protected static final String DEFAULT_OUTPUT_DATE_FORMAT = "yyyy-MM-dd.";
-    private static final String[] DATE_FORMATS = {"yyyy.MM.dd", "yyyy. MMM dd", "yyyy. MMMM dd",
-        "yyyy. MM. dd", "yyyy-MM-dd", "MM/dd/yyyy", "dd/MM/yyyy", "dd.MM.yyyy"};
+    //private static final String[] DATE_FORMATS = {"yyyy.MM.dd", "yyyy. MMM dd", "yyyy. MMMM dd", "yyyy. MM. dd", "yyyy-MM-dd", "MM/dd/yyyy", "dd/MM/yyyy", "dd.MM.yyyy"};
+    private static final String[] DATE_FORMATS = {"yyyy.MM.dd",  "yyyy. MM. dd", "yyyy-MM-dd", 
+                                                                            "yyyy/MM/dd", "MM/dd/yyyy", "dd/MM/yyyy", "dd.MM.yyyy", "yyyy MM dd"};
     static String inputDate;
     static LocalDate localDate = null;
 
@@ -38,6 +39,8 @@ public class DateConverter {
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(format);
         this.localDate = LocalDate.parse(inputDate, dateFormat);
     }
+    
+    
     
     
     
