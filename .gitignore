@@ -1,0 +1,8 @@
+# Default ignored files
+/shelf/
+/.idea/workspace.xml
+.idea/
+DateConverterDemo.iml
+build/
+nbproject/private/
+out/
