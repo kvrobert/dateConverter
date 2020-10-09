@@ -455,7 +455,7 @@ public class DateConverterDemo {
         }
         //convertedDateSet.forEach(System.out::println);
 
-        System.out.println("--------------------  " + converted + "m missing ---> " + (list.length - converted));
+        System.out.println("--------------------  " + converted + " dates converted. SUM  missing ---> " + (list.length - converted));
         System.out.println(DateConverter.normalizeDate("2020 ápr. 16. 20:59", "yyyy-MM-dd"));
         System.out.println(DateConverter.normalizeDate("2020", "yyyy-MM-dd"));
         // System.out.println("The NEW DATEs " + convertedDateSet.toArray(new String[convertedDateSet.size()])[10]);
@@ -468,6 +468,12 @@ public class DateConverterDemo {
 ////              System.out.println(loc.toString());
 ////          }
 //System.out.println(SimpleDateFormat.getDateInstance().toString());
+
+    String ehh = "Helloka / valami.";
+        System.out.println(ehh);
+        System.out.println(ehh.replaceAll("/", "aaa"));
+
+
 
     }
 

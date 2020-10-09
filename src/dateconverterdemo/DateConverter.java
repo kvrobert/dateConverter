@@ -13,11 +13,9 @@ import java.util.regex.Pattern;
 class DateConverter {
 
     private static final String DEFAULT_OUTPUT_DATE_FORMAT = "yyyy-MM-dd";
-    private static final String[] DATE_FORMATS_HUN = {"yyyy.MM.dd", "yyyy. MM. dd", "yyyy MM dd", "yyyy-MM-dd",
-            "yyyy/MM/dd", "yyyy MM dd", "yyyy MM. dd", "yyyy. MM dd", "yyyy. MM dd.", "yyyy MM dd.", "yyyy MM", "yyyy"};
-    private static final String[] DATE_FORMATS_ENG = {"MM/dd/yy", "MM/dd/yyyy", "MM. dd yyyy", "MM dd yyyy", "MM yyyy", "MM/yyyy", "MM-yyyy", "MMddyyyy"};
-    private static final String[] DATE_FORMATS_GER = {"dd/MM/yy", "dd.MM.yyyy", "dd MM. yyyy", "dd/MM/yyyy", "dd-MM-yyyy", "dd MM yyyy", "MMddyyyy"};
-    //private static final String HUN_FORMAT_REGEX = "^\\d{4}";
+    private static final String[] DATE_FORMATS_HUN = {"yyyy MM dd", "yyyy MM", "yyyy"};
+    private static final String[] DATE_FORMATS_ENG = {"dd MM yy", "MM yyyy", "ddMMyyyy"};
+    private static final String[] DATE_FORMATS_GER = {"MM dd yy", "MM dd yyyy", "MMddyyyy"};
     private static final String HUN_FORMAT_REGEX = "^(1|2)[0-9]\\d{2}";
     private static final String FOREIGN_FORMAT_REGEX = "^\\d{2}";
     private static final Map<String, String> DATE_MONTH_REGEX = new HashMap<>();
@@ -56,53 +54,68 @@ class DateConverter {
         Pattern pattern = Pattern.compile(HUN_FORMAT_REGEX);
         Matcher matcher = pattern.matcher(dateText);
         String[] dateFormants; // = matcher.find() ? DATE_FORMATS_HUN : DATE_FORMATS_ENG;
-
+        String origText = dateText;
         dateText = normalizeDateText(dateText, dateOutFormat);
-        System.out.println("text: " + dateText);
+        //System.out.print("orig: " + origText + "  normalizedText: " + dateText + "\t");
         if (matcher.find()) {
             dateFormants = DATE_FORMATS_HUN;
-            System.out.println("hun..");
+            //System.out.print("hun..");
         } else {
-            if (isGermanDateFormat(dateText)) {
-                dateFormants = DATE_FORMATS_GER;
-                System.out.println("ger..");
-            } else {
+            if (isEngFormat(dateText)) {
                 dateFormants = DATE_FORMATS_ENG;
-                System.out.println("eng..");
+                //System.out.print("eng..");
+            } else {
+                dateFormants = DATE_FORMATS_GER;
+                //System.out.print("ger..");
             }
         }
         for (String dateFormatIn : dateFormants) {
             try {
-                return transformDate(dateText, dateFormatIn, dateOutFormat);
+                String date = transformDate(dateText, dateFormatIn, dateOutFormat);
+                //System.out.print("\t " + dateFormatIn + "  ");
+                return date;
             } catch (Exception ignored) {
             }
         }
         return null;
     }
 
-    private static boolean isGermanDateFormat(String dateText) {
-        Pattern germanPattern = Pattern.compile(FOREIGN_FORMAT_REGEX);
-        Matcher germanMatcher = germanPattern.matcher(dateText);
-        if (germanMatcher.find()) {
-            int germanDays = Integer.parseInt(dateText.trim().substring(0, 2));
-            return germanDays > 12;
-        } else {
-            return false;
+    private static boolean isEngFormat(String dateText) {
+        // int germanDays = Integer.parseInt(dateText.trim().substring(0, 2));
+        List<String> dateTags = Arrays.asList(dateText.trim().split(" "));
+        if (dateTags.size() == 3) {
+            return !isMoth(dateTags.get(0)) || !isDay(dateTags.get(1));
         }
+
+        return false;
+    }
+
+    private static boolean isMoth(String dateTag) {
+        int date = Integer.parseInt(dateTag);
+        return date > 0 && date <= 12;
+    }
+
+    private static boolean isDay(String dateTag) {
+        int date = Integer.parseInt(dateTag);
+        return date > 0 && date <= 31;
     }
 
     private static String normalizeDateText(String dateText, String dateOutFormat) {
-
         Pattern pattern;
         Matcher matcher;
+
+        dateText = dateText
+                .replaceAll("[\n\r,\\.-]", " ")
+                .replaceAll("/", " ")
+                .replaceAll("\\s{2}", " ");
+
         for (Map.Entry<String, String> entry : DATE_MONTH_REGEX.entrySet()) {
             pattern = Pattern.compile(entry.getKey());
             matcher = pattern.matcher(dateText);
 
             if (matcher.find()) {
                 return dateText
-                        .replaceAll(entry.getKey(), entry.getValue())
-                        .replaceAll("[\n\r,]", " ");
+                        .replaceAll(entry.getKey(), entry.getValue());
             }
         }
         return dateText;
