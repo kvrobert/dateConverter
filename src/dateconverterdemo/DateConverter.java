@@ -15,10 +15,10 @@ class DateConverter {
     private static final String DEFAULT_OUTPUT_DATE_FORMAT = "yyyy-MM-dd";
     private static final String[] DATE_FORMATS_HUN = {"yyyy.MM.dd", "yyyy. MM. dd", "yyyy MM dd", "yyyy-MM-dd",
             "yyyy/MM/dd", "yyyy MM dd", "yyyy MM. dd", "yyyy. MM dd", "yyyy. MM dd.", "yyyy MM dd.", "yyyy MM", "yyyy"};
-    private static final String[] DATE_FORMATS_ENG = {"MM/dd/yy", "MM/dd/yyyy", "MM. dd yyyy", "MM yyyy", "MM/yyyy", "MM-yyyy"};
-    private static final String[] DATE_FORMATS_GER = {"dd/MM/yy", "dd.MM.yyyy", "dd MM. yyyy", "dd/MM/yyyy", "dd-MM-yyyy"};
-    private static final String DATE_MATCH_REGEX = "[a-zA-Z]";
-    private static final String HUN_FORMAT_REGEX = "^\\d{4}";
+    private static final String[] DATE_FORMATS_ENG = {"MM/dd/yy", "MM/dd/yyyy", "MM. dd yyyy", "MM dd yyyy", "MM yyyy", "MM/yyyy", "MM-yyyy", "MMddyyyy"};
+    private static final String[] DATE_FORMATS_GER = {"dd/MM/yy", "dd.MM.yyyy", "dd MM. yyyy", "dd/MM/yyyy", "dd-MM-yyyy", "dd MM yyyy", "MMddyyyy"};
+    //private static final String HUN_FORMAT_REGEX = "^\\d{4}";
+    private static final String HUN_FORMAT_REGEX = "^(1|2)[0-9]\\d{2}";
     private static final String FOREIGN_FORMAT_REGEX = "^\\d{2}";
     private static final Map<String, String> DATE_MONTH_REGEX = new HashMap<>();
 
@@ -58,14 +58,17 @@ class DateConverter {
         String[] dateFormants; // = matcher.find() ? DATE_FORMATS_HUN : DATE_FORMATS_ENG;
 
         dateText = normalizeDateText(dateText, dateOutFormat);
-
+        System.out.println("text: " + dateText);
         if (matcher.find()) {
             dateFormants = DATE_FORMATS_HUN;
+            System.out.println("hun..");
         } else {
             if (isGermanDateFormat(dateText)) {
                 dateFormants = DATE_FORMATS_GER;
+                System.out.println("ger..");
             } else {
                 dateFormants = DATE_FORMATS_ENG;
+                System.out.println("eng..");
             }
         }
         for (String dateFormatIn : dateFormants) {
@@ -97,7 +100,9 @@ class DateConverter {
             matcher = pattern.matcher(dateText);
 
             if (matcher.find()) {
-                return dateText.replaceAll(entry.getKey(), entry.getValue());
+                return dateText
+                        .replaceAll(entry.getKey(), entry.getValue())
+                        .replaceAll("[\n\r,]", " ");
             }
         }
         return dateText;
