@@ -73,7 +73,7 @@ class DateConverter {
         }
         for (String dateFormatIn : dateFormants) {
             try {
-                return transformDate(dateText, dateFormatIn, DEFAULT_OUTPUT_DATE_FORMAT);
+                return transformDate(dateText, dateFormatIn, dateOutFormat);
             } catch (Exception ignored) {
             }
         }
